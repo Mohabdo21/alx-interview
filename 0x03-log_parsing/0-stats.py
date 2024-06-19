@@ -36,11 +36,11 @@ signal.signal(signal.SIGINT, print_stats)
 # Read from stdin line by line
 try:
     for line in sys.stdin:
-        line_count += 1
         match = log_pattern.match(line)
         if match:
             total_size += int(match.group(4))
             status_codes[match.group(3)] += 1
+            line_count += 1
         if line_count % 10 == 0:
             print_stats()
 except KeyboardInterrupt:
