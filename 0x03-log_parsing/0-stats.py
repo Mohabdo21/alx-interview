@@ -39,15 +39,18 @@ try:
         line_count += 1
         match = log_pattern.match(line)
         if match:
-            total_size += int(match.group(4))
-            status_codes[match.group(3)] += 1
+            status_code = match.group(3)
+            file_size = int(match.group(4))
+
+            total_size += file_size
+            status_codes[status_code] += 1
+
         if line_count % 10 == 0:
             print_stats()
 except KeyboardInterrupt:
     print_stats()
-    sys.exit()
-except Exception as e:
-    print(f"Error: {e}", file=sys.stderr)
+# except Exception as e:
+#    print(f"Error: {e}", file=sys.stderr)
 
 # Print final statistics if not exiting due to CTRL+C
 print_stats()
