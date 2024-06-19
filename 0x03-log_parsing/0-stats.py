@@ -27,7 +27,6 @@ def print_stats(signum=None, frame=None):
         if status_codes[code] > 0:
             print(f"{code}: {status_codes[code]}")
     if signum is not None:
-        print_stats()
         sys.exit(0)
 
 
@@ -41,7 +40,7 @@ try:
             match = log_pattern.match(line)
             if match:
                 total_size += int(match.group(4))
-                status_codes[match.group(3)] += 1
+                status_codes[int(match.group(3))] += 1
                 line_count += 1
             if line_count % 10 == 0:
                 print_stats()
