@@ -20,18 +20,27 @@ log_pattern = re.compile(
 )
 
 
-def print_stats(signum=None, frame=None):
+def print_stats():
     """Function to print the statistics"""
     print("File size: {}".format(total_size))
     for code in sorted(status_codes.keys()):
         if status_codes[code] > 0:
             print("{}: {}".format(code, status_codes[code]))
-    if signum is not None:
-        sys.exit(0)
+
+
+def signal_handler(sig, frame):
+    """[TODO:description]
+
+    Args:
+        sig ([TODO:parameter]): [TODO:description]
+        frame ([TODO:parameter]): [TODO:description]
+    """
+    print_stats()
+    sys.exit(0)
 
 
 # Set up signal handling for CTRL+C
-signal.signal(signal.SIGINT, print_stats)
+signal.signal(signal.SIGINT, signal_handler)
 
 # Read from stdin line by line
 try:
