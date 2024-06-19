@@ -4,10 +4,11 @@ Module contains the method print_stats that parse the log
 """
 import signal
 import sys
+from collections import defaultdict
 
 # Initialize variables
 total_size = 0
-status_codes = {str(i): 0 for i in [200, 301, 400, 401, 403, 404, 405, 500]}
+status_codes = defaultdict(int)
 line_count = 0
 
 
