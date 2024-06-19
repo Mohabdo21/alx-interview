@@ -22,10 +22,10 @@ log_pattern = re.compile(
 
 def print_stats(signum=None, frame=None):
     """Function to print the statistics"""
-    print(f"File size: {total_size}")
+    print("File size: {}".format(total_size))
     for code in sorted(status_codes.keys()):
         if status_codes[code] > 0:
-            print(f"{code}: {status_codes[code]}")
+            print("{}: {}".format(code, status_codes[code]))
     if signum is not None:
         sys.exit(0)
 
@@ -40,7 +40,7 @@ try:
             match = log_pattern.match(line)
             if match:
                 total_size += int(match.group(4))
-                status_codes[int(match.group(3))] += 1
+                status_codes[match.group(3)] += 1
                 line_count += 1
             if line_count % 10 == 0:
                 print_stats()
