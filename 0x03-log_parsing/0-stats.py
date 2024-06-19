@@ -43,6 +43,9 @@ try:
             status_codes[match.group(3)] += 1
         if line_count % 10 == 0:
             print_stats()
+except KeyboardInterrupt:
+    print_stats()
+    sys.exit()
 except Exception as e:
     print(f"Error: {e}", file=sys.stderr)
 
