@@ -43,8 +43,7 @@ try:
             status_codes[match.group(3)] += 1
         if line_count % 10 == 0:
             print_stats()
-except Exception as e:
-    print(f"Error: {e}", file=sys.stderr)
-
-# Print final statistics if not exiting due to CTRL+C
-print_stats()
+    print_stats()
+except KeyboardInterrupt:
+    print_stats()
+    raise
