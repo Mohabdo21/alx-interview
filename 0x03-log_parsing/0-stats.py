@@ -9,8 +9,8 @@ import sys
 from collections import defaultdict
 
 total_size = 0
-status_codes = defaultdict(int)
-line_count = 1
+status_codes = {str(i): 0 for i in [200, 301, 400, 401, 403, 404, 405, 500]}
+line_count = 0
 
 # Regular expression pattern for the log lines
 log_pattern = re.compile(
