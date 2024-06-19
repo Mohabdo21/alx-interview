@@ -27,6 +27,7 @@ def print_stats(signum=None, frame=None):
         if status_codes[code] > 0:
             print(f"{code}: {status_codes[code]}")
     if signum is not None:
+        print_stats()
         sys.exit(0)
 
 
