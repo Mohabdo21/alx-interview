@@ -1,68 +1,50 @@
 #!/usr/bin/python3
-"""[TODO:description]
-
-[TODO:description]
 """
-
+Module contains the method print_stats that parse the log
+"""
 
 import re
 import signal
 import sys
+from collections import defaultdict
 
-status_counts = {}
 total_size = 0
+status_codes = defaultdict(int)
 line_count = 0
 
-# Validate input format
-log_regex = re.compile(
-    r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3} - "
-    r'\[\S+ \S+\] "GET /projects/260 HTTP/1.1" '
-    r"(\d{3}) (\d+)$"
+# Regular expression pattern for the log lines
+log_pattern = re.compile(
+    r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) - "
+    r'\[(.*?)\] "GET /projects/260 HTTP/1\.1" '
+    r"(\d{3}) (\d+)"
 )
 
 
-# Signal handler for keyboard interruption (CTRL + C)
-def signal_handler(sig, frame):
-    print_stats()
-    sys.exit(0)
-
-
-signal.signal(signal.SIGINT, signal_handler)
-
-
-def print_stats():
-    """[TODO:description]"""
-    global total_size, status_counts
+def print_stats(signum=None, frame=None):
+    """Function to print the statistics"""
     print(f"File size: {total_size}")
-    for code in sorted(status_counts.keys()):
-        if status_counts[code] > 0:
-            print(f"{code}: {status_counts[code]}")
+    for code in sorted(status_codes.keys()):
+        if status_codes[code] > 0:
+            print(f"{code}: {status_codes[code]}")
+    if signum is not None:
+        sys.exit()
 
 
-# Reading from stdin line by line
+# Set up signal handling for CTRL+C
+signal.signal(signal.SIGINT, print_stats)
+
+# Read from stdin line by line
 try:
     for line in sys.stdin:
-        match = log_regex.match(line)
+        line_count += 1
+        match = log_pattern.match(line)
         if match:
-            status_code = int(match.group(1))
-            file_size = int(match.group(2))
-
-            # Update total file size
-            total_size += file_size
-
-            # Update status code count
-            if status_code not in status_counts:
-                status_counts[status_code] = 0
-            status_counts[status_code] += 1
-
-            line_count += 1
-
-            # Print stats every 10 lines
-            if line_count % 10 == 0:
-                print_stats()
-
+            total_size += int(match.group(4))
+            status_codes[match.group(3)] += 1
+        if line_count % 10 == 0:
+            print_stats()
 except Exception as e:
     print(f"Error: {e}", file=sys.stderr)
 
-# Final statistics printout
+# Print final statistics if not exiting due to CTRL+C
 print_stats()
