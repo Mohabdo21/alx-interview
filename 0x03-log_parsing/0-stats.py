@@ -10,7 +10,7 @@ from collections import defaultdict
 
 total_size = 0
 status_codes = defaultdict(int)
-line_count = 0
+line_count = 1
 
 # Regular expression pattern for the log lines
 log_pattern = re.compile(
