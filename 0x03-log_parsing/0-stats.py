@@ -45,11 +45,18 @@ signal.signal(signal.SIGINT, signal_handler)
 try:
     for line in sys.stdin:
         try:
-            match = log_pattern.match(line)
-            if match:
-                total_size += int(match.group(4))
-                status_codes[match.group(3)] += 1
-                line_count += 1
+            # match = log_pattern.match(line)
+            # if match:
+            #     total_size += int(match.group(4))
+            #     status_codes[match.group(3)] += 1
+            parts = line.split()
+            size = int(parts[-1])
+            code = parts[-2]
+
+            if code in status_codes:
+                status_codes[code] += 1
+            total_size += size
+            line_count += 1
             if line_count % 10 == 0:
                 print_stats()
         except Exception:
