@@ -2,48 +2,58 @@
 """
 Module contains the method print_stats that parse the log
 """
-
-import re
 import signal
 import sys
-from collections import defaultdict
 
+# Initialize variables
 total_size = 0
-status_codes = defaultdict(int)
+status_codes = {str(i): 0 for i in [200, 301, 400, 401, 403, 404, 405, 500]}
 line_count = 0
 
-# Regular expression pattern for the log lines
-log_pattern = re.compile(
-    r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) - "
-    r'\[(.*?)\] "GET /projects/260 HTTP/1\.1" '
-    r"(\d{3}) (\d+)"
-)
 
-
-def print_stats(signum=None, frame=None):
-    """Function to print the statistics"""
-    print(f"File size: {total_size}")
+def print_stats():
+    """[TODO:description]"""
+    print("File size: {}".format(total_size))
     for code in sorted(status_codes.keys()):
         if status_codes[code] > 0:
-            print(f"{code}: {status_codes[code]}")
-    if signum is not None:
-        sys.exit()
+            print("{}: {}".format(code, status_codes[code]))
 
 
-# Set up signal handling for CTRL+C
-signal.signal(signal.SIGINT, print_stats)
+def signal_handler(sig, frame):
+    """[TODO:description]
 
-# Read from stdin line by line
+    Args:
+        sig ([TODO:parameter]): [TODO:description]
+        frame ([TODO:parameter]): [TODO:description]
+    """
+    print_stats()
+    sys.exit(0)
+
+
+# Handle Ctrl+C
+signal.signal(signal.SIGINT, signal_handler)
+
 try:
     for line in sys.stdin:
-        line_count += 1
-        match = log_pattern.match(line)
-        if match:
-            total_size += int(match.group(4))
-            status_codes[match.group(3)] += 1
-        if line_count % 10 == 0:
-            print_stats()
-    print_stats()
+        try:
+            parts = line.split()
+            size = int(parts[-1])
+            code = parts[-2]
+
+            if code in status_codes:
+                status_codes[code] += 1
+
+            total_size += size
+            line_count += 1
+
+            if line_count % 10 == 0:
+                print_stats()
+
+        except Exception:
+            pass
+
 except KeyboardInterrupt:
+    pass
+
+finally:
     print_stats()
-    raise
