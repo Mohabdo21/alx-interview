@@ -4,7 +4,7 @@ UTF-8 Validation Module.
 """
 
 
-def validUTF8(data: list[int]) -> bool:
+def validUTF8(data):
     """
     Validate whether a given list of integers represents a sequence of
     valid UTF-8 encoded bytes.
