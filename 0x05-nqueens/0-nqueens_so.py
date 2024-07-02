@@ -28,42 +28,6 @@ class NQueensSolver:
         self.size = size
         self.lib = ctypes.CDLL("./libnqueens.so")
 
-        # Define argument and return types for the C functions
-        self.lib.solve_nqueens.argtypes = [ctypes.c_int]
-        self.lib.solve_nqueens.restype = None
-
-        self.lib.add_solution.argtypes = [
-            ctypes.POINTER(ctypes.POINTER(ctypes.c_int)),
-            ctypes.c_int,
-            ctypes.POINTER(ctypes.POINTER(ctypes.POINTER(ctypes.c_int))),
-            ctypes.POINTER(ctypes.c_int),
-        ]
-        self.lib.add_solution.restype = None
-
-        self.lib.solve_nqueens_util.argtypes = [
-            ctypes.POINTER(ctypes.POINTER(ctypes.c_int)),
-            ctypes.c_int,
-            ctypes.c_int,
-            ctypes.POINTER(ctypes.POINTER(ctypes.POINTER(ctypes.c_int))),
-            ctypes.POINTER(ctypes.c_int),
-        ]
-        self.lib.solve_nqueens_util.restype = None
-
-        self.lib.is_safe.argtypes = [
-            ctypes.POINTER(ctypes.POINTER(ctypes.c_int)),
-            ctypes.c_int,
-            ctypes.c_int,
-            ctypes.c_int,
-        ]
-        self.lib.is_safe.restype = ctypes.c_int
-
-        self.lib.print_solutions.argtypes = [
-            ctypes.POINTER(ctypes.POINTER(ctypes.c_int)),
-            ctypes.c_int,
-            ctypes.c_int,
-        ]
-        self.lib.print_solutions.restype = None
-
     def solve(self):
         """
         Solve the N Queens problem using the shared C library.
