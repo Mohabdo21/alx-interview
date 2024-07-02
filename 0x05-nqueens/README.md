@@ -68,3 +68,12 @@ Finally, you can run the Python script with the desired board size to solve the 
 ```
 
 This setup allows you to leverage the performance of C for solving the N Queens problem while providing the convenience of a Python interface.
+
+## Performance Insights
+
+I conducted a performance comparison between the Python script and the Python script with the shared library. Here are the results for N=10:
+
+- Average execution time for `0-nqueens.py`: **820.00 milliseconds**
+- Average execution time for `0-nqueens_so.py`: **30.00 milliseconds**
+
+As demonstrated, the Python script with the shared library significantly outperforms the pure Python script, showcasing the efficiency of C for performance-critical code.
