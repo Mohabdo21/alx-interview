@@ -6,7 +6,6 @@ void solve_nqueens_util(int **board, int size, int col, int ***solutions,
 		int *solution_count);
 int is_safe(int **board, int size, int row, int col);
 void print_solutions(int **solutions, int solution_count, int size);
-void free_board(int **board, int size);
 
 /**
  * main - Main function to handle command line arguments and start the solver
