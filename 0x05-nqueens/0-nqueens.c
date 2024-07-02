@@ -2,6 +2,8 @@
 #include <stdlib.h>
 
 void solve_nqueens(int size);
+void add_solution(int **board, int size, int ***solutions,
+		int *solution_count);
 void solve_nqueens_util(int **board, int size, int col, int ***solutions,
 		int *solution_count);
 int is_safe(int **board, int size, int row, int col);
@@ -12,6 +14,10 @@ void print_solutions(int **solutions, int solution_count, int size);
  * @argc: Argument count
  * @argv: Argument vector
  * Return: 0 on success, 1 on failure
+ *
+ * This function processes command-line arguments to get the board size,
+ * checks for valid input, and initiates the N Queens solver. It prints
+ * usage information if the input is invalid.
  */
 int main(int argc, char **argv)
 {
@@ -38,6 +44,11 @@ int main(int argc, char **argv)
 /**
  * solve_nqueens - Solves the N Queens problem
  * @size: The size of the board (the number of queens)
+ *
+ * This function initializes the chessboard, calls the backtracking solver
+ * function to find all possible solutions, and then prints these solutions.
+ * It also handles memory allocation and deallocation for the board and
+ * solutions.
  */
 void solve_nqueens(int size)
 {
@@ -47,9 +58,24 @@ void solve_nqueens(int size)
 	int i, j;
 
 	board = malloc(size * sizeof(int *));
+	if (board == NULL)
+	{
+		fprintf(stderr, "Memory allocation failed\n");
+		exit(EXIT_FAILURE);
+	}
+
 	for (i = 0; i < size; i++)
 	{
 		board[i] = malloc(size * sizeof(int));
+		if (board[i] == NULL)
+		{
+			fprintf(stderr, "Memory allocation failed\n");
+			for (j = 0; j < i; j++)
+				free(board[j]);
+			free(board);
+			exit(EXIT_FAILURE);
+		}
+
 		for (j = 0; j < size; j++)
 			board[i][j] = 0;
 	}
@@ -79,31 +105,16 @@ void solve_nqueens(int size)
  * place queens in the next columns. If a safe position is found, it marks
  * this cell in the board and moves to the next column. If no safe position
  * can be found in the current column or if the queen placed in the previous
- * column leads to no solution, then it backtracks and returns false.
+ * column leads to no solution, then it backtracks and removes the queen.
  */
 void solve_nqueens_util(int **board, int size, int col, int ***solutions,
 		int *solution_count)
 {
-	int i, j, **new_solutions;
+	int i;
 
 	if (col >= size)
 	{
-		new_solutions = malloc((*solution_count + 1) * sizeof(int *));
-		for (i = 0; i < *solution_count; i++)
-			new_solutions[i] = (*solutions)[i];
-
-		new_solutions[*solution_count] = malloc(size * 2 * sizeof(int));
-		for (i = 0; i < size; i++)
-			for (j = 0; j < size; j++)
-				if (board[i][j] == 1)
-				{
-					new_solutions[*solution_count][i * 2] = i;
-					new_solutions[*solution_count][i * 2 + 1] = j;
-				}
-
-		free(*solutions);
-		*solutions = new_solutions;
-		(*solution_count)++;
+		add_solution(board, size, solutions, solution_count);
 		return;
 	}
 
@@ -116,6 +127,50 @@ void solve_nqueens_util(int **board, int size, int col, int ***solutions,
 			board[i][col] = 0;
 		}
 	}
+}
+
+/**
+ * add_solution - Adds the current board configuration as a solution
+ * @board: Double pointer to the 2D array representing the chessboard
+ * @size: The size of the board (the number of queens)
+ * @solutions: Triple pointer to store the solutions
+ * @solution_count: Pointer to the solution count
+ *
+ * This function allocates memory to store a new solution, extracts the queen
+ * positions from the board, and adds this solution to the solutions array.
+ * It also handles memory allocation errors.
+ */
+void add_solution(int **board, int size, int ***solutions, int *solution_count)
+{
+	int i, j, **new_solutions;
+
+	new_solutions = realloc(*solutions, (*solution_count + 1) * sizeof(int *));
+	if (new_solutions == NULL)
+	{
+		fprintf(stderr, "Memory allocation failed\n");
+		exit(EXIT_FAILURE);
+	}
+
+	new_solutions[*solution_count] = malloc(size * 2 * sizeof(int));
+	if (new_solutions[*solution_count] == NULL)
+	{
+		fprintf(stderr, "Memory allocation failed\n");
+		for (i = 0; i < *solution_count; i++)
+			free(new_solutions[i]);
+		free(new_solutions);
+		exit(EXIT_FAILURE);
+	}
+
+	for (i = 0; i < size; i++)
+		for (j = 0; j < size; j++)
+			if (board[i][j] == 1)
+			{
+				new_solutions[*solution_count][i * 2] = i;
+				new_solutions[*solution_count][i * 2 + 1] = j;
+			}
+
+	*solutions = new_solutions;
+	(*solution_count)++;
 }
 
 /**
