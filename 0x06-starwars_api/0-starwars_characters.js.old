@@ -13,16 +13,21 @@
 
 const request = require('request');
 
-// Wrap the request function in a Promise
-const requestPromise = (url) => {
-  return new Promise((resolve, reject) => {
-    request(url, (err, response, body) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(JSON.parse(body).name);
-      }
-    });
+/**
+ * Recursively requests and logs the names of characters from an array of URLs.
+ *
+ * @param {string[]} arr - The array of character URLs.
+ * @param {number} i - The current index in the array.
+ */
+const req = (arr, i) => {
+  if (i === arr.length) return; // Base case: end of array
+  request(arr[i], (err, response, body) => {
+    if (err) {
+      console.error('Error fetching character:', err);
+    } else {
+      console.log(JSON.parse(body).name);
+      req(arr, i + 1); // Recursive call for the next character
+    }
   });
 };
 
@@ -34,19 +39,7 @@ request(
       console.error('Error fetching film:', err);
     } else {
       const chars = JSON.parse(body).characters; // Array of character URLs
-
-      // Array of Promises
-      const promises = chars.map((url) => requestPromise(url));
-
-      // Wait for all Promises to resolve
-      Promise.all(promises)
-        .then((names) => {
-          // Print all character names
-          names.forEach((name) => console.log(name));
-        })
-        .catch((err) => {
-          console.error('Error fetching character:', err);
-        });
+      req(chars, 0); // Start recursive character fetching
     }
   }
 );
