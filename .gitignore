@@ -1,0 +1,63 @@
+# .gitignore
+
+# Node.js
+## Ignore node_modules directory
+node_modules/
+
+## Ignore logs
+*.log
+
+## Ignore the npm debug log
+npm-debug.log*
+
+## Ignore IDE specific files
+.idea/
+.vscode/
+
+# Python
+## Ignore compiled python files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+## Ignore virtual environment
+venv/
+*.venv
+.env
+
+## Ignore Jupyter Notebook
+.ipynb_checkpoints
+
+## Ignore PyCharm specific files
+.idea/
+
+## Ignore distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# General
+## Ignore OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
