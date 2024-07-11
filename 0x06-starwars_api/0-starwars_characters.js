@@ -13,7 +13,13 @@
 
 const request = require('request');
 
-// Wrap the request function in a Promise
+/**
+ * Wraps the 'request' function in a Promise.
+ * Sends a GET request to the specified URL and resolves with the name of the character.
+ *
+ * @param {string} url - The URL of the character resource.
+ * @returns {Promise} A Promise that resolves with the name of the character.
+ */
 const requestPromise = (url) => {
   return new Promise((resolve, reject) => {
     request(url, (err, response, body) => {
@@ -26,7 +32,13 @@ const requestPromise = (url) => {
   });
 };
 
-// Fetch the film data
+/**
+ * Fetches the film data from the SWAPI and starts the process of fetching the character data.
+ * Sends a GET request to the URL of the film resource and then sends GET requests to the URLs of each character resource.
+ * The character names are printed as the responses are received.
+ *
+ * @param {string} film_id - The ID of the film to fetch data from.
+ */
 request(
   `https://swapi-api.alx-tools.com/api/films/${process.argv[2]}`,
   (err, response, body) => {
