@@ -16,10 +16,13 @@ def makeChange(coins, total):
     """
     Determine the fewest number of coins needed to meet a given amount total.
 
-    :param coins: List of the values of the coins in possession.
-    :param total: The total amount to be achieved.
-    :return: The fewest number of coins needed to meet total, or -1 if it
-    cannot be met.
+    Args:
+        coins (List[int]): The values of the coins in possession.
+        total (int): The total amount to be achieved.
+
+    Returns:
+        int: The fewest number of coins needed to meet total, or -1 if it
+        cannot be met.
     """
     if total <= 0:
         return 0
