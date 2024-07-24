@@ -28,10 +28,9 @@ def makeChange(coins, total):
     dp[0] = 0  # Base case: 0 coins needed to make 0 amount
 
     # Fill the DP array
-    for i in range(1, total + 1):
-        for coin in coins:
-            if coin <= i:
-                dp[i] = min(dp[i], dp[i - coin] + 1)
+    for coin in coins:
+        for i in range(coin, total + 1):
+            dp[i] = min(dp[i], dp[i - coin] + 1)
 
     # If dp[total] is still infinity, it means we cannot make the total with
     # the given coins
