@@ -28,10 +28,12 @@ def isWinner(x, nums):
             list: A list of prime numbers up to n.
         """
         is_prime = [True] * (n + 1)
-        for p in range(2, int(n**0.5) + 1):
+        p = 2
+        while p * p <= n:
             if is_prime[p]:
                 for i in range(p * p, n + 1, p):
                     is_prime[i] = False
+            p += 1
         return [p for p in range(2, n + 1) if is_prime[p]]
 
     def determine_winner(n):
@@ -44,14 +46,20 @@ def isWinner(x, nums):
         Returns:
             str: The name of the winner ('Maria' or 'Ben').
         """
-        return "Maria" if len(sieve_of_eratosthenes(n)) % 2 else "Ben"
+        if n < 2:
+            return "Ben"
+        primes = sieve_of_eratosthenes(n)
+        # Game strategy based on number of primes
+        return "Maria" if len(primes) % 2 == 1 else "Ben"
 
     win_count = {"Maria": 0, "Ben": 0}
     for num in nums:
-        win_count[determine_winner(num)] += 1
+        winner = determine_winner(num)
+        win_count[winner] += 1
 
-    return (
-        max(win_count, key=win_count.get)
-        if win_count["Maria"] != win_count["Ben"]
-        else None
-    )
+    if win_count["Maria"] > win_count["Ben"]:
+        return "Maria"
+    elif win_count["Ben"] > win_count["Maria"]:
+        return "Ben"
+    else:
+        return None
